@@ -1,0 +1,26 @@
+{
+  "name": "tdd-practice",
+  "version": "1.0.0",
+  "description": "用于学习实践TDD编程方式",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JTR354/tdd-practice.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JTR354/tdd-practice/issues"
+  },
+  "homepage": "https://github.com/JTR354/tdd-practice#readme",
+  "devDependencies": {
+    "@babel/core": "^7.17.7",
+    "@babel/preset-env": "^7.16.11",
+    "babel-jest": "^27.5.1",
+    "jest": "^27.5.1"
+  }
+}
