@@ -4,64 +4,95 @@
  * 1. 红
  * 2. 绿
  * 3. 重构
+ *
+ * 重构:
+ * 1. 消除分支
+ * 2. 消除重复
+ * 3. 直接
  */
 
-export default function parseArgs(str = "") {
-  let result = {
+export default function parseArgs(
+  str = "",
+  defaultValue = {
     logging: false,
     port: 0,
     directory: "",
-  };
-  let collection = [];
-  let index = -1;
-  str.split(" ").forEach((it) => {
-    if (isKey(it)) {
-      index++;
-      collection[index] = [];
-    }
-    if (index > -1) {
-      collection[index].push(it);
-    }
+  }
+) {
+  let value = defaultValue;
+  let ranges = getFlagRanges(str.split(" "));
+  ranges.forEach((it) => {
+    value = Object.assign(value, parse(it));
   });
-  collection.forEach((it) => {
-    result = Object.assign(result, parse(it));
-  });
-  return result;
+  return value;
 }
+
+const options = {
+  l: parseLogging,
+  p: parsePort,
+  d: parseDirectory,
+  g: parseG,
+};
 
 function isKey(it) {
   return /^-[a-zA-Z]{1}$/.test(it);
 }
 
+function getFlagRanges(arr) {
+  let ranges = [];
+  let index = -1;
+  arr.forEach((it) => {
+    if (isKey(it)) {
+      index++;
+      ranges[index] = [];
+    }
+    ranges[index] && ranges[index].push(it);
+  });
+  return ranges;
+}
+
 function parse(it) {
   const [flag, ...others] = it;
-  if (flag[1] === "l") {
-    if (others.length) {
-      throw new Error(`-l error`);
-    }
-    return { logging: true };
+  const exec = options[flag[1]];
+  return typeof exec === "function" && exec(others);
+}
+
+function parseLogging(others) {
+  if (others.length) {
+    throw new Error(`-l error`);
   }
-  if (flag[1] === "p") {
-    if (others.length > 1) {
-      throw new Error(`-p error`);
-    }
-    return { port: Number.parseInt(others[0]) };
+  return { logging: true };
+}
+
+function parsePort(others) {
+  if (others.length > 1) {
+    throw new Error(`-p has many port error`);
   }
-  if (flag[1] === "d") {
-    if (others.length === 1) {
-      return { directory: String(others[0]) };
-    }
-    return {
-      directory: others.map((it) => {
-        const number = Number.parseInt(it);
-        if (isNaN(number)) {
-          throw new Error("-d error");
-        }
-        return number;
-      }),
-    };
+  const port = Number.parseInt(others[0]);
+  if (isNaN(port)) {
+    throw new Error(`-p empty error`);
   }
-  if (flag[1] === "g") {
-    return { g: others.map((it) => String(it)) };
+  return { port };
+}
+
+function parseDirectory(others) {
+  if (!others.length) {
+    throw new Error("-d empty error");
   }
+  if (others.length === 1) {
+    return { directory: String(others[0]) };
+  }
+  return {
+    directory: others.map((it) => {
+      const number = Number.parseInt(it);
+      if (isNaN(number)) {
+        throw new Error("-d has many dirs error");
+      }
+      return number;
+    }),
+  };
+}
+
+function parseG(others) {
+  return { g: others.map((it) => String(it)) };
 }

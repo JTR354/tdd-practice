@@ -28,9 +28,15 @@ describe("args", () => {
   test("sad path:- int: -p 8080 8081 ", () => {
     expect(() => parseArgs("-p 8080 8081")).toThrow();
   });
+  test("sad path:- int: -p  ", () => {
+    expect(() => parseArgs("-p ")).toThrow();
+  });
   // - string: -d /usr/logs /user/chat
   test("sad path: -d /usr/logs /user/chat ", () => {
     expect(() => parseArgs("-d /usr/logs /user/chat")).toThrow();
+  });
+  test("sad path: -d", () => {
+    expect(() => parseArgs("-d")).toThrow();
   });
   // default:
   // - bool: false
