@@ -5,38 +5,57 @@ describe("args", () => {
    * -g this is a list -d 1 2 -3 5　"g"表示一个字符串列表[“this”, “is”, “a”, “list”]，“d"标志表示一个整数列表[1, 2, -3, 5]。
    */
   // single:
-  //TODO  - bool: -l
+  // - bool: -l
   test("parse -l is true", () => {
-    expect(parseArgs("-l")).toEqual({ logging: true });
+    expect(parseArgs("-l")).toMatchObject({ logging: true });
   });
-  //TODO  - int: -p 8080
+  // - int: -p 8080
   test("parse -p is 8080", () => {
-    expect(parseArgs("-p 8080")).toEqual({ port: 8080 });
+    expect(parseArgs("-p 8080")).toMatchObject({ port: 8080 });
   });
-  //TODO  - string: -d /usr/logs
+  // - string: -d /usr/logs
   test("parse -d is /usr/logs", () => {
-    expect(parseArgs("-d /usr/logs")).toEqual({ directory: "/usr/logs" });
+    expect(parseArgs("-d /usr/logs")).toMatchObject({ directory: "/usr/logs" });
   });
-  //TODO multi: -l -p 8080 -d /usr/logs
+  //multi: -l -p 8080 -d /usr/logs
   // sad path:
-  //TODO  - bool: -l t/ -l t f
-  //TODO  - int: -p 8080 8081
-  //TODO  - string: -d /usr/logs /user/chat
+  //  - bool: -l t/ -l t f
+  test("sad path: -l t/ -l t f throw error", () => {
+    expect(() => parseArgs("-l t")).toThrow();
+    expect(() => parseArgs("-l t f")).toThrow();
+  });
+  //  - int: -p 8080 8081
+  test("sad path:- int: -p 8080 8081 ", () => {
+    expect(() => parseArgs("-p 8080 8081")).toThrow();
+  });
+  // - string: -d /usr/logs /user/chat
+  test("sad path: -d /usr/logs /user/chat ", () => {
+    expect(() => parseArgs("-d /usr/logs /user/chat")).toThrow();
+  });
   // default:
-  //TODO - bool: false
-  //TODO - int: 0
-  //TODO - string: ''
-  test("demo1", () => {
+  // - bool: false
+  test("default: bool false", () => {
+    expect(parseArgs()).toMatchObject({ logging: false });
+  });
+  // - int: 0
+  test("default: int 0", () => {
+    expect(parseArgs()).toMatchObject({ port: 0 });
+  });
+  // - string: ''
+  test("default: string ''", () => {
+    expect(parseArgs()).toMatchObject({ directory: "" });
+  });
+  test("multi: -l -p 8080 -d /usr/logs", () => {
     expect(parseArgs("-l -p 8080 -d /usr/logs")).toEqual({
       logging: true,
       port: 8080,
       directory: "/usr/logs",
     });
   });
-  test.skip("should 2", () => {
-    expect(parseArgs("-g this is a list -d 1 2 -3 5")).toEqual({
+  test("multi: -g this is a list -d 1 2 -3 5", () => {
+    expect(parseArgs("-g this is a list -d 1 2 -3 5")).toMatchObject({
       g: ["this", "is", "a", "list"],
-      d: [1, 2, -3, 5],
+      directory: [1, 2, -3, 5],
     });
   });
 });
