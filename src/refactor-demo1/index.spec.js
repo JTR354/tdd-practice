@@ -1,4 +1,5 @@
-import { statement, htmlStatement, invoice, plays } from "./index";
+import { statement, htmlStatement } from "./index";
+import { invoice, plays } from "./data";
 describe("重构，第一个示例", () => {
   test("demo1", () => {
     expect(statement(invoice[0], plays)).toEqual(
@@ -11,7 +12,7 @@ You earned 47 credits
 `
     );
   });
-  test('demo2', () => {
+  test("demo2", () => {
     expect(htmlStatement(invoice[0], plays)).toEqual(
       `<h1>Statement for BigCo</h1>
 <table>
@@ -21,6 +22,6 @@ You earned 47 credits
 </table><p>Amount owed is <em>$1,730.00</em></p>
 <p>You earned <em>47</em> credits</p>
 `
-    )
-  })
+    );
+  });
 });
