@@ -1,3 +1,5 @@
+import { describe, test, expect } from "vitest";
+
 import parseArgs from "../index";
 describe("args", () => {
   /**
