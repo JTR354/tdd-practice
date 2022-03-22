@@ -1,5 +1,16 @@
 import { statement, htmlStatement } from "./index";
 import { invoice, plays } from "./data";
+
+/**
+ * 重构手法
+ * 1. 提炼函数
+ * 2. 内联变量
+ * 3. 搬移函数
+ * 4. 以多态取代条件表达式
+ *
+ * 重构的核心思想:
+ * 1. 分离关注点
+ */
 describe("重构，第一个示例", () => {
   test("demo1", () => {
     expect(statement(invoice[0], plays)).toEqual(
